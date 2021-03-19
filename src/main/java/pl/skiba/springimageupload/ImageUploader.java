@@ -2,6 +2,7 @@ package pl.skiba.springimageupload;
 import com.cloudinary.*;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.skiba.springimageupload.model.Image;
 import pl.skiba.springimageupload.repo.ImageRepo;
@@ -17,13 +18,26 @@ public class ImageUploader {
     private Cloudinary cloudinary;
     private ImageRepo imageRepo;
 
+
+    @Value("${cloudNameValue}")
+    private String cloudNameValue;
+    @Value("${apiKeyValue}")
+    private String apiKeyValue;
+    @Value("${apiSecretValue}")
+    private String apiSecretValue;
+
+
     @Autowired
-    public ImageUploader(ImageRepo imageRepo) {
+    public ImageUploader(ImageRepo imageRepo ,
+                         @Value("${cloudNameValue}") String cloudNameValue,
+                         @Value("${apiKeyValue}") String apiKeyValue,
+                         @Value("${apiSecretValue}") String apiSecretValue)
+    {
         this.imageRepo = imageRepo;
          cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "drpbc7lsl",
-                "api_key", "461414337451821",
-                "api_secret", "45f_qy9oAexb1_53SdkyCMLSTFU"));
+                "cloud_name", cloudNameValue,
+                "api_key", apiKeyValue,
+                "api_secret", apiSecretValue));
     }
 
     public String uploadFileAndSaveToDb(String path) {
